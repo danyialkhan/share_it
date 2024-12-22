@@ -1,13 +1,16 @@
 import {View, Text, SafeAreaView, TouchableOpacity, Image} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {homeHeaderStyles} from '../../styles/homeHeaderStyles';
 import {commonStyles} from '../../styles/commonStyles';
 import Icon from '../global/Icon';
 import {logo_t, profile2} from '../../AssetsConstants';
 import Svg, {Defs, LinearGradient, Path, Stop} from 'react-native-svg';
 import {screenHeight, screenWidth, svgPath} from '../../utils/Constants';
+import QRScannerModel from '../modals/QRScannerModal';
+import QRGenerateModal from '../modals/QRGenerateModal';
 
 const HomeHeader = () => {
+  const [isVisible, setVisible] = useState(false);
   return (
     <View style={homeHeaderStyles.mainContainer}>
       <SafeAreaView />
@@ -16,7 +19,7 @@ const HomeHeader = () => {
           <Icon name="menu" iconFamily="Ionicons" size={22} color="#fff" />
         </TouchableOpacity>
         <Image source={logo_t} style={homeHeaderStyles.logo} />
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => setVisible(true)}>
           <Image source={profile2} style={homeHeaderStyles.profile} />
         </TouchableOpacity>
       </View>
@@ -34,6 +37,12 @@ const HomeHeader = () => {
         <Path fill="#80BFFF" d={svgPath} />
         <Path fill="url(#grad)" d={svgPath} />
       </Svg>
+      {isVisible && (
+        <QRGenerateModal
+          visible={isVisible}
+          onClose={() => setVisible(false)}
+        />
+      )}
     </View>
   );
 };
