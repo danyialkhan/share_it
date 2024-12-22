@@ -2,7 +2,7 @@ import {launchImageLibrary, Asset} from 'react-native-image-picker';
 import DocumentPicker, {
   DocumentPickerResponse,
 } from 'react-native-document-picker';
-import { PermissionsAndroid } from 'react-native';
+import {PermissionsAndroid} from 'react-native';
 
 type MediaPickedCallback = (media: Asset) => void;
 type FilePickedCallback = (file: DocumentPickerResponse[]) => void;
@@ -58,17 +58,18 @@ export const formatFileSize = (sizeInBytes: number): string => {
   }
 };
 
-
-
-export const checkFilePermissions = async (platform:string) => {
-  if(platform === 'android') {
+export const checkFilePermissions = async (platform: string) => {
+  if (platform === 'android') {
     try {
       const granted = await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
       ]);
-      if (granted['android.permission.READ_EXTERNAL_STORAGE'] && granted['android.permission.WRITE_EXTERNAL_STORAGE']) {
-        console.log("STORAGE PERMISSION GRANTED ✅")
+      if (
+        granted['android.permission.READ_EXTERNAL_STORAGE'] &&
+        granted['android.permission.WRITE_EXTERNAL_STORAGE']
+      ) {
+        console.log('STORAGE PERMISSION GRANTED ✅');
         return true;
       } else {
         return false;

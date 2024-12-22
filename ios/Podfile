@@ -1,10 +1,9 @@
-# Resolve react_native_pods.rb with node to allow for hoisting
 def node_require(script)
   require Pod::Executable.execute_command('node', ['-p',
-    'require.resolve(
-      "react-native/scripts/react_native_pods.rb",
+    "require.resolve(
+      '#{script}',
       {paths: [process.argv[1]]},
-    )', __dir__]).strip
+     )", __dir__]).strip
 end
 
 node_require('react-native/scripts/react_native_pods.rb')

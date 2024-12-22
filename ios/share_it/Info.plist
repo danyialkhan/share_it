@@ -26,7 +26,6 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-	  <!-- Do not change NSAllowsArbitraryLoads to true, or you will risk app rejection! -->
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
@@ -39,17 +38,15 @@
 		<string>_http._tcp</string>
 	</array>
 	<key>NSCalendarsFullAccessUsageDescription</key>
- 	 <string>Your app needs access to documents to save files.</string>
- 	 <key>NSCalendarsWriteOnlyAccessUsageDescription</key>
- 	 <string>Your app needs access to documents to save files.</string>
+	<string>Your app needs access to documents to save files.</string>
+	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
+	<string>Your app needs access to documents to save files.</string>
 	<key>NSDocumentsFolderUsageDescription</key>
 	<string>Your app needs access to documents to save files.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs access to your Camera.</string>
-	<key>NSDocumentsFolderUsageDescription</key>
-	<string>Your app needs access to documents to save files.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs access to your Microphone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
