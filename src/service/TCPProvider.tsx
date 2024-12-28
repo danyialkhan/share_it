@@ -52,8 +52,8 @@ export const TCPProvider: FC<{children: React.ReactNode}> = ({children}) => {
   const [isConnected, setConnected] = useState<boolean>(false);
   const [connectedDevice, setConnectedDevice] = useState<any>(null);
   const [serverSocket, setServerSocket] = useState<any>(null);
-  const [sentFiles, setSentFiles] = useState<any>(null);
-  const [receivedFiles, setReceivedFiles] = useState<any>(null);
+  const [sentFiles, setSentFiles] = useState<any>([]);
+  const [receivedFiles, setReceivedFiles] = useState<any>([]);
   const [totalSentBytes, setTotalSentBytes] = useState<number>(0);
   const [totalReceivedBytes, setTotalReceivedBytes] = useState<number>(0);
 
