@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ActivityIndicator,
+  FlatList,
   Platform,
 } from 'react-native';
 import React, {FC, useEffect, useState} from 'react';
@@ -16,7 +17,6 @@ import CustomText from '../components/global/CustomText';
 import Options from '../components/home/Options';
 import {goBack, resetAndNavigate} from '../utils/NavigationUtil';
 import {formatFileSize} from '../utils/libraryHelpers';
-import {FlatList} from 'react-native-gesture-handler';
 import {Colors} from '../utils/Constants';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 
