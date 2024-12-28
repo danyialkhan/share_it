@@ -1,4 +1,11 @@
-import {View, Text, SafeAreaView, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  ActivityIndicator,
+  Platform,
+} from 'react-native';
 import React, {FC, useEffect, useState} from 'react';
 import {useTCP} from '../service/TCPProvider';
 import Icon from '../components/global/Icon';
@@ -9,6 +16,9 @@ import CustomText from '../components/global/CustomText';
 import Options from '../components/home/Options';
 import {goBack, resetAndNavigate} from '../utils/NavigationUtil';
 import {formatFileSize} from '../utils/libraryHelpers';
+import {FlatList} from 'react-native-gesture-handler';
+import {Colors} from '../utils/Constants';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 
 const ConnectionScreen: FC = () => {
   const {
@@ -68,7 +78,7 @@ const ConnectionScreen: FC = () => {
   };
 
   useEffect(() => {
-    if (isConnected) {
+    if (!isConnected) {
       resetAndNavigate('HomeScreen');
     }
   }, [isConnected]);
@@ -79,6 +89,53 @@ const ConnectionScreen: FC = () => {
 
   const handleTabChange = (tab: 'SENT' | 'RECEIVED') => {
     setActiveTab(tab);
+  };
+
+  const renderItem = ({item}: any) => {
+    return (
+      <View style={connectionStyles.fileItem}>
+        <View style={connectionStyles.fileInfoContainer}>
+          {renderThumbnail(item?.mimeType)}
+          <View style={connectionStyles.fileDetails}>
+            <CustomText numberOfLines={1} fontFamily="Okra-Bold" fontSize={10}>
+              {item?.name}
+            </CustomText>
+            <CustomText numberOfLines={1} fontFamily="Okra-Bold" fontSize={10}>
+              {item?.mimeType} ● {formatFileSize(item?.size)}
+            </CustomText>
+          </View>
+        </View>
+        {item?.available ? (
+          <TouchableOpacity
+            onPress={() => {
+              const normalizedPath =
+                Platform.OS === 'ios' ? `file//:${item?.uri}` : item?.uri;
+              if (Platform.OS === 'ios') {
+                ReactNativeBlobUtil.ios
+                  .openDocument(normalizedPath)
+                  .then(() => console.log('file opened successfully'))
+                  .catch(e => console.error('Error opening file', e));
+              } else {
+                ReactNativeBlobUtil.android
+                  .actionViewIntent(normalizedPath, '*/*')
+                  .then(() => console.log('file opened successfully'))
+                  .catch(e => console.error('Error opening file', e));
+              }
+            }}
+            style={connectionStyles.openButton}>
+            <CustomText
+              numberOfLines={1}
+              fontFamily="Okra-Bold"
+              fontSize={9}
+              color="#fff">
+              Open
+            </CustomText>
+          </TouchableOpacity>
+        ) : (
+          <ActivityIndicator color={Colors.primary} size="small" />
+        )}
+      </View>
+    );
   };
 
   return (
@@ -194,6 +251,27 @@ const ConnectionScreen: FC = () => {
                 </CustomText>
               </View>
             </View>
+
+            {(activeTab == 'SENT' ? sentFiles.length : receivedFiles.length) >
+            0 ? (
+              <FlatList
+                data={activeTab == 'SENT' ? sentFiles : receivedFiles}
+                keyExtractor={item => item.id.toString()}
+                renderItem={renderItem}
+                contentContainerStyle={connectionStyles.fileList}
+              />
+            ) : (
+              <View style={connectionStyles.noDataContainer}>
+                <CustomText
+                  numberOfLines={1}
+                  fontFamily="Okra-Medium"
+                  fontSize={11}>
+                  {activeTab == 'SENT'
+                    ? 'No files sent yet.'
+                    : 'No files received yet.'}
+                </CustomText>
+              </View>
+            )}
           </View>
         </View>
         <TouchableOpacity onPress={handleGoBack} style={sendStyles.backButton}>

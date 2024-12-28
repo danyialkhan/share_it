@@ -6,7 +6,7 @@ import {logo_text} from '../AssetsConstants';
 
 const SplashScreen: FC = () => {
   const navigateToHome = () => {
-    navigate('ConnectionScreen');
+    navigate('HomeScreen');
   };
 
   useEffect(() => {
