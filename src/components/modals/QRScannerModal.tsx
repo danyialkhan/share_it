@@ -20,12 +20,15 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {no_camera} from '../../AssetsConstants';
+import {useTCP} from '../../service/TCPProvider';
+import {navigate} from '../../utils/NavigationUtil';
 
 interface ModalProps {
   visible: boolean;
   onClose: () => void;
 }
 const QRScannerModel: FC<ModalProps> = ({visible, onClose}) => {
+  const {connectToServer, isConnected} = useTCP();
   const [loading, setLoading] = useState(false);
   const [codeFound, setCodeFound] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
@@ -64,6 +67,7 @@ const QRScannerModel: FC<ModalProps> = ({visible, onClose}) => {
         .split('|');
       const [host, port] = connectionData.split(':');
       // connect to server
+      connectToServer(host, parseInt(port, 10), deviceName);
     }
   };
 
@@ -85,6 +89,13 @@ const QRScannerModel: FC<ModalProps> = ({visible, onClose}) => {
     }),
     [codeFound],
   );
+
+  useEffect(() => {
+    if (isConnected) {
+      onClose();
+      navigate('ConnectionScreen');
+    }
+  }, [isConnected]);
 
   return (
     <Modal

@@ -65,7 +65,7 @@ export const TCPProvider: FC<{children: React.ReactNode}> = ({children}) => {
 
   // Start Server
   const startServer = useCallback(
-    (port: number) => {
+    async (port: number) => {
       if (server) {
         console.log('server is already running.');
         return;

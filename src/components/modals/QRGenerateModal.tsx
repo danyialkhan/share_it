@@ -22,24 +22,37 @@ import QRCode from 'react-native-qrcode-svg';
 import {profile2} from '../../AssetsConstants';
 import {multiColor} from '../../utils/Constants';
 import DeviceInfo from 'react-native-device-info';
+import {useTCP} from '../../service/TCPProvider';
+import {navigate} from '../../utils/NavigationUtil';
+import {getLocalIPAddress} from '../../utils/networkUtils';
 
 interface ModalProps {
   visible: boolean;
   onClose: () => void;
 }
 const QRGenerateModal: FC<ModalProps> = ({visible, onClose}) => {
+  const {isConnected, startServer, server} = useTCP();
   const [loading, setLoading] = useState(false);
   const [qrValue, setQRValue] = useState('');
   const shimmerTranslateX = useSharedValue(-300);
+
   const shimmerStyle = useAnimatedStyle(() => ({
     transform: [{translateX: shimmerTranslateX.value}],
   }));
 
-  useEffect(() => {}, [visible]);
-
   const setupServer = async () => {
     const deviceName = await DeviceInfo.getDeviceName();
-    setQRValue(deviceName);
+    const ip = await getLocalIPAddress();
+    const port = 4000;
+    if (server) {
+      setQRValue(`tcp://${ip}:${port}|${deviceName}`);
+      setLoading(false);
+      return;
+    }
+
+    startServer(port);
+    setQRValue(`tcp://${ip}:${port}|${deviceName}`);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -56,6 +69,13 @@ const QRGenerateModal: FC<ModalProps> = ({visible, onClose}) => {
       return () => clearTimeout(timer);
     }
   }, [visible]);
+
+  useEffect(() => {
+    if (isConnected) {
+      onClose();
+      navigate('ConnectionScreen');
+    }
+  }, [isConnected]);
 
   return (
     <Modal
