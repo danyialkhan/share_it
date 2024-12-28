@@ -14,11 +14,11 @@ export const receiveFileAck = async (
     return;
   }
 
-  setReceivedFiles((prevData: any) => {
+  setReceivedFiles((prevData: any) =>
     produce(prevData, (draft: any) => {
       draft.push(data);
-    });
-  });
+    }),
+  );
 
   setChunkStore({
     id: data?.id,
@@ -79,7 +79,7 @@ export const sendChunkAck = async (
 
     if (chunkIndex + 2 > totalChunks) {
       console.log('all chunks sent successfully');
-      setSentFiles((prev: any) => {
+      setSentFiles((prev: any) =>
         produce(prev, (draftFiles: any) => {
           const fileIndex = draftFiles?.findIndex(
             (f: any) => f?.id === currentChunkSet.id,
@@ -87,8 +87,8 @@ export const sendChunkAck = async (
           if (fileIndex != -1) {
             draftFiles[fileIndex].available = true;
           }
-        });
-      });
+        }),
+      );
       resetCurrentChunkStore();
     }
   } catch (error) {

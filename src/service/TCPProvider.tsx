@@ -304,8 +304,8 @@ export const TCPProvider: FC<{children: React.ReactNode}> = ({children}) => {
       const combinedChunks = Buffer.concat(chunkStore.chunkArray);
       const platformPath =
         Platform.OS == 'ios'
-          ? `${RNFS.DownloadDirectoryPath}`
-          : `${RNFS.DocumentDirectoryPath}`;
+          ? `${RNFS.DocumentDirectoryPath}`
+          : `${RNFS.DownloadDirectoryPath}`;
 
       const filePath = `${platformPath}/${chunkStore.name}`;
       await RNFS.writeFile(
@@ -313,7 +313,7 @@ export const TCPProvider: FC<{children: React.ReactNode}> = ({children}) => {
         combinedChunks.toString('base64'),
         'base64',
       );
-      setReceivedFiles((prevFiles: any) => {
+      setReceivedFiles((prevFiles: any) =>
         produce(prevFiles, (draftFiles: any) => {
           const fileIndex = draftFiles?.findIndex(
             (f: any) => f.id === chunkStore.id,
@@ -325,8 +325,8 @@ export const TCPProvider: FC<{children: React.ReactNode}> = ({children}) => {
               available: true,
             };
           }
-        });
-      });
+        }),
+      );
       console.log('file saved successfully.', filePath);
     } catch (error) {
       console.error('error generating files', error);
